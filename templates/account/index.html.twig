@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello AccountController!{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+    table, th, td {
+        border: 1px solid;
+    }
+</style>
+<div class="example-wrapper">
+    <header><a href="/logout">Se déconnecter</a></header>
+    <h1>Bonjour {{ user.username }}!</h1>
+    <p>Votre solde :</p>
+    <p>{{ account.amount|number_format(2) }} €</p>
+    <h2>Vos transactions</h2>
+    <a href="/virement">Faire un virement</a>
+    <a href="/add-fund">Ajouter des fond </a>
+    <table>
+        <thead>
+        <tr>
+            <th>Type</th>
+            <th>Provenance</th>
+            <th>Montant</th>
+            <th>Destinataire</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for transaction in transactions %}
+            <tr>
+                <td>{{ transaction.mode is same as(1) ? 'virement' : 'ajout de fond par carte' }}</td>
+                <td>{{ transaction.mode is same as(1) ? 'compte' : 'carte' }} {{ transaction.sender }}</td>
+                <td>{{ transaction.mode is same as(1) and transaction.sender is same as(account.id) ? '-' : '+' }} {{ transaction.amount|number_format(2) }} €</td>
+                <td>compte {{ transaction.receiver }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
