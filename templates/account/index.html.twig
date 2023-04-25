@@ -9,6 +9,9 @@
     table, th, td {
         border: 1px solid;
     }
+    .alert{position: absolute;top:10px;color: white}
+    .alert-success{background-color: #1c7430;}
+    .alert-error{background-color: #8e1313;}
 </style>
 <div class="example-wrapper">
     <header><a href="/logout">Se déconnecter</a></header>
@@ -39,4 +42,10 @@
         </tbody>
     </table>
 </div>
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-error">{{ message }}</div>
+    {% endfor %}
 {% endblock %}

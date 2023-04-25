@@ -37,8 +37,18 @@ class TransactionController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $virement = $form->getData();
             $account = $ar->findOneBy(['user'=> $user->getId()]);
-            $virement->setSender($account);
-            return $this->redirectToRoute('app_account');
+            $virement->setSender($account->getId());
+            if($account->getAmount() - $virement->getAmount() >= 0.00){
+                $account->setAmount( $account->getAmount() - $virement->getAmount());
+                $account2 = $ar->findOneBy(['user'=> $virement->getReceiver()]);
+                $account2->setAmount( $account2->getAmount() + $virement->getAmount());
+                $em->persist($virement);
+                $em->flush();
+                $this->addFlash('success', 'Virement effectué');
+                return $this->redirectToRoute('app_account');
+            }else{
+                $this->addFlash('error', 'Fonds insuffisants');
+            }
         }
         return $this->render('transaction/virement.html.twig', [
             'form' => $form->createView(),
@@ -61,6 +71,7 @@ class TransactionController extends AbstractController
             $account->setAmount( $account->getAmount() + $virement->getAmount());
             $em->persist($virement);
             $em->flush();
+            $this->addFlash('success', 'Ajout de fond effectué');
             return $this->redirectToRoute('app_account');
         }
 

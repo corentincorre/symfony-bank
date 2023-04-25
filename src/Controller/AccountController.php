@@ -21,7 +21,7 @@ class AccountController extends AbstractController
         $addFund = $tr->findBy(['receiver' => $account]);
         $virements = $tr->findBy(['sender' => $account->getId()]);
         $transactions = array_merge($addFund, $virements);
-        usort($transactions, function($a, $b) {return strcmp($a->getId(), $b->getId());});
+        usort($transactions, function($a, $b) {return -strcmp($a->getId(), $b->getId());});
         return $this->render('account/index.html.twig', [
             'user' => $user,
             'account' => $account,
